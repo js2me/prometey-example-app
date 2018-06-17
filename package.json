@@ -6,6 +6,11 @@
   "dependencies": {
     "lodash": "^4.17.10"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acacode/prometey.git"
+  },
+  "homepage": "https://github.com/acacode/prometey",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
