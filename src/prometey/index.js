@@ -1,4 +1,4 @@
-import Prometey from './Prometey'
+import { Prometey } from './Prometey'
 import { createElement } from './createElement'
 import { createTag } from './createTag'
 

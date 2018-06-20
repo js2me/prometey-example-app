@@ -1,4 +1,5 @@
-import Prometey, { tag, create, Component } from './prometey'
+import { tag, create, find } from './prometey'
+import Input from './components/Input'
 import './styles.css'
 
 const logoSrc =
@@ -23,21 +24,6 @@ tag('super-input', (value, placeholder) => {
 
 create('#app->div.wrapper', [
   ['app-header', 'Just Dogs'],
-  create('section.content', [create('div', [create('super-input')])]),
+  create(Input, { placeholder: 'default placeholder' }),
   create('section.footer', [create('span', 'End of page')]),
 ])
-
-class LolPrikol extends Component {
-  constructor() {
-    super()
-    console.log('LolPrikol constructor')
-  }
-
-  render() {
-    console.log('LolPrikol render')
-    return 'MMM'
-  }
-}
-
-const lol = new LolPrikol()
-lol.render()

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { Prometey } from './Prometey'
 import { findTag } from './createTag'
 
 const eventsList =
@@ -31,15 +32,19 @@ const appendProps = (props, element) =>
   _.forEach(props, (value, key) => {
     if (key === 'class') {
       element.className = typeof value === 'string' ? value : value.join(' ')
+    } else if (key === 'childs') {
+      appendChilds(value, element)
     } else if (eventsList.includes(`/${key}/`)) {
       element.addEventListener(key, value)
     } else {
-      element.setAttribute(key, value)
+      if (!_.isUndefined(value)) {
+        element.setAttribute(key, value)
+      }
     }
   })
 
 const appendString = (props, element, tag) => {
-  if (!_.isUndefined(props))
+  if (!_.isUndefined(props)) {
     if (tag === 'input') {
       element.value = props
     } else if (tag === 'img') {
@@ -47,12 +52,17 @@ const appendString = (props, element, tag) => {
     } else {
       element.innerText = props
     }
+  }
 }
 
-export const createElement = (query, props, commonData, connectors) => {
+export const createElement = (query, props, connectors) => {
+  if (_.isObject(query)) {
+    const component = Prometey(query, props)
+    return component.render()
+  }
   let existingTag = findTag(query)
   if (existingTag) {
-    return existingTag(props, commonData, connectors)
+    return existingTag(props, connectors)
   }
   const { id, tag, classes, parent } = parseQuery(query)
   const element = document.createElement(tag)
