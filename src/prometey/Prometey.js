@@ -1,26 +1,24 @@
 import _ from 'lodash'
+import { attachTree } from './createElement'
 
 let uid = 0
 export const Prometey = (Class, props) => {
-  let exemplar = new Class()
-  exemplar.props = props
-  exemplar.__proto__.PROMETEY_ID = uid++
+  let context = new Class()
+  context.props = props
+  context.__proto__.PROMETEY_ID = uid++
 
-  const stateCopy = _.cloneDeep(exemplar.state)
   let updaterTimer = null
 
-  _.forEach(exemplar.state, (value, key) => {
-    exemplar.state.__defineSetter__(key, value => {
+  _.forEach(context.state, (value, key) => {
+    context.state.watch(key, () => {
       clearTimeout(updaterTimer)
-      stateCopy[key] = value
       updaterTimer = setTimeout(() => {
-        exemplar.render()
+        context.render()
       })
-    })
-    exemplar.state.__defineGetter__(key, value => {
-      return stateCopy[key]
     })
   })
 
-  return exemplar
+  const rawRender = context.render.bind(context)
+  context.render = () => rawRender()
+  return context
 }

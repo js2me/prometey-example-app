@@ -1,4 +1,4 @@
-import { create } from '../prometey'
+import { element } from '../prometey'
 
 export default class Input {
   state = {
@@ -6,7 +6,7 @@ export default class Input {
     value: '',
   }
 
-  handleChangeInput(e) {
+  handleChangeInput = e => {
     this.state.value = e.target.value
   }
 
@@ -16,9 +16,9 @@ export default class Input {
 
     console.log('Input render', this.state)
 
-    return create('div.input-wrapper', [
-      create('span.placeholder', placeholder),
-      create('input.super-input', {
+    return element('div.input-wrapper', [
+      element('span.placeholder', placeholder),
+      element('input.super-input', {
         input: this.handleChangeInput,
         value,
       }),

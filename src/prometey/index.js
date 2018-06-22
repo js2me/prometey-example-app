@@ -1,5 +1,6 @@
+import './object.watch.js'
 import { Prometey } from './Prometey'
-import { createElement } from './createElement'
+import { createElement, attachTree } from './createElement'
 import { createTag } from './createTag'
 
 export { createElement } from './createElement'
@@ -11,6 +12,9 @@ export { Component } from './Component'
 export const tag = createTag
 export const create = createElement
 export const elem = createElement
+export const element = createElement
 /* ---- short keywords ---- */
+
+Prometey.connect = attachTree
 
 export default Prometey
