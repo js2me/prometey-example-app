@@ -1,4 +1,4 @@
-import { element, classes } from '../prometey'
+import { element, classes } from '../../prometey'
 import './index.css'
 
 export default class Input {
@@ -20,8 +20,8 @@ export default class Input {
   render() {
     let { value, isDirty } = this.state
     const { placeholder } = this.props
-    return element('div', {
-      className: classes('input-wrapper', {
+    return element('div.input-wrapper', {
+      class: classes('input-wrapper', {
         'is-empty': isDirty && !value,
         'is-dirty': isDirty,
       }),

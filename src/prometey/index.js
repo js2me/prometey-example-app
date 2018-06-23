@@ -1,14 +1,12 @@
-import './object.watch.js'
+import './polyfills/object.watch.js'
 import { Prometey } from './Prometey'
-import { createElement, createTree } from './createElement'
+import { createElement, createTree } from './element'
 import { createTag } from './createTag'
 import { createDOM, attachDOM } from './DOM'
 
 export { classes } from './classes'
-export { createElement } from './createElement'
+export { createElement } from './element'
 export { createTag } from './createTag'
-export { Element } from './Element'
-export { Component } from './Component'
 
 /* ---- short keywords ---- */
 export const tag = createTag

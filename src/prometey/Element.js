@@ -1,67 +1,149 @@
-const elementCreator = str => {
-  const [element, ...classes] = str.split('.')
+import _ from 'lodash'
+import { classes } from './classes'
+import { Prometey } from './Prometey'
+import { getElementByEId } from './DOM'
+
+export const parseQuery = (queryString, classNames) => {
+  let [parent, query] = queryString.split('->')
+  if (!query) {
+    query = parent
+    parent = null
+  }
+  const [element, ...className] = query.split('.')
   const [tag, id] = element.split('#')
   return {
+    class: classes(className, classNames),
     id,
+    parent,
     tag,
-    classes,
   }
 }
 
-const collectAttributes = (element, attributes) => {
-  const attrKeys = Object.keys(attributes)
-  for (let x = 0; x < attrKeys; x++) {
-    let key = attrKeys[x]
-    element[HANDLER_KEYS[key] ? 'addEventListener' : 'setAttribute'](
-      key,
-      attributes[key]
+// const appendChilds = (childs, element) =>
+//   _.map(childs, child =>
+//     element.appendChild(
+//       child instanceof Element ? child : createElement.apply(null, child)
+//     )
+//   )
+
+const generateElId = (pId, id) => `${pId}${id}`
+
+// element = { id, tag, classes, parent }
+const attachElementToTree = (treeData, eId) => {
+  let treeEl = { ...treeData }
+  if (!eId) {
+    eId = `${JSDOMTree.push(treeEl) - 1}`
+  }
+  treeEl.eId = eId
+  if (treeData.childs) {
+    treeEl.childs = createTree(treeData.childs, eId)
+  }
+  return treeEl
+}
+
+const updateElement = (oldTD, newTD) => {
+  if (newTD.className !== oldTD.className) {
+    const treeDOMel = getElementByEId(oldTD.eId)
+    treeDOMel.element.className = newTD.className
+  }
+}
+
+let JSDOMTree = []
+
+const aggregateTreeData = (treeData, id, pId) => {
+  const eId = pId && id && generateElId(pId, id)
+  const treeEl = attachElementToTree(treeData, eId)
+  if (treeEl.component) {
+    let updaterTimer = null
+    _.forEach(treeEl.component.state, (value, key) => {
+      treeEl.component.state.watch(key, (key, value) => {
+        if (updaterTimer !== null) {
+          clearTimeout(updaterTimer)
+        }
+        updaterTimer = setTimeout(() => {
+          updaterTimer = null
+          updateElement(treeEl, treeEl.component.render())
+        }, 0)
+      })
+    })
+  }
+  return treeEl
+}
+
+export const createTree = (treeData, pId) => {
+  let data
+  if (_.isArray(treeData)) {
+    data = _.map(treeData, (element, id) =>
+      aggregateTreeData(element, `${id}`, pId)
     )
+  } else {
+    data = [aggregateTreeData(treeData)]
   }
+  return data
 }
 
-const HANDLER_KEYS = {
-  click: true,
-  blur: true,
-}
-
-export class Element {
-  childs = []
-  classes = []
-  connecters = []
-  element = null
-  id = ''
-  tag = ''
-
-  constructor(str, attributes, childs, connecters) {
-    if (typeof str === 'string') {
-      const { id, tag, classes } = elementCreator(str)
-      this.id = id
-      this.tag = tag
-      this.classes = classes
-      this.element = document.createElement(tag)
-      if (classes.length) {
-        this.element.className = classes.join(' ')
-      }
-      if (id) {
-        this.element.setAttribute('id', id)
-      }
-    }
-
-    if (attributes instanceof Array) {
-      connecters = childs
-      childs = attributes
-    } else if (typeof attributes === 'object') {
-      collectAttributes(this.element, attributes)
-    } else {
-      this.element.innerText = attributes
-    }
-    if (childs instanceof Array) {
-      this.childs = childs.map(this.constructor.apply)
-    } else if (childs !== null && childs !== undefined) {
-      this.element.innerText = childs
-    } else {
-      this.element.innerText = ''
-    }
-    this.connecters = connecters.map(connecter => connecter(this.element))
+export const createElement = (query, props) => {
+  // query = 'section.footer', props = [create('span', 'End of page')]
+  if (_.isObject(query)) {
+    const component = Prometey(query, props)
+    let componentTreeData = component.render()
+    componentTreeData.component = component
+    // TODO Пробросить контекст через Prometey и склеить контекст с treeData
+    // Это как вариант, потом просто обновлять как нибудь((
+    return componentTreeData
   }
+
+  let data = { ...parseQuery(query, _.get(props, 'class')) }
+  if (_.isArray(props)) {
+    data.childs = _.compact([...props])
+  } else if (_.isObject(props)) {
+    const childs = props.childs
+    if (childs && childs.length) {
+      data.childs = _.compact([...childs])
+    }
+    data.props = _.omit(props, ['childs', 'class'])
+  } else {
+    data.props = props
+  }
+  return data
+  // const element = document.createElement(tag)
+  // if (classes.length) {
+  //   element.class = classes.join(' ')
+  // }
+  // if (id) {
+  //   element.setAttribute('id', id)
+  // }
+
+  // return () => generateElement(query, props, connectors)
+  // if (_.isObject(query)) {
+  //   const component = Prometey(query, props)
+  //   return component.render()
+  // }
+  // let existingTag = findTag(query)
+  // if (existingTag) {
+  //   return existingTag(props, connectors)
+  // }
+  // const { id, tag, classes, parent } = parseQuery(query)
+  // const element = document.createElement(tag)
+  // if (classes.length) {
+  //   element.class = classes.join(' ')
+  // }
+  // if (id) {
+  //   element.setAttribute('id', id)
+  // }
+  // if (_.isArray(props)) {
+  //   appendChilds(props, element)
+  // } else if (_.isObject(props)) {
+  //   appendProps(props, element)
+  // } else {
+  //   appendString(props, element, tag)
+  // }
+  // if (parent) {
+  //   const parentElement = document.querySelector(parent)
+  //   if (!parentElement) throw Error(`Element by query "${parent}" is not found`)
+  //   // setTimeout(() => {
+  //   parentElement.appendChild(element)
+  //   // })
+  // }
+  // return element
 }

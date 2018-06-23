@@ -17,11 +17,11 @@ const EVENTS_LIST =
   'invalid/localized/message/message/message/open/show/'
 
 export const attachToDOM = treeData => {
-  const { tag, className, id: elDOMid, parent, props } = treeData
+  const { tag, id: elDOMid, parent, props } = treeData
 
   const element = document.createElement(tag)
-  if (className.length) {
-    element.className = className
+  if (treeData.class.length) {
+    element.className = treeData.class
   }
   if (elDOMid) {
     element.setAttribute('id', elDOMid)
@@ -32,7 +32,7 @@ export const attachToDOM = treeData => {
         if (EVENTS_LIST.includes(`/${key}/`)) {
           element.addEventListener(key, value)
         } else {
-          if (!_.isUndefined(value) && key !== 'className') {
+          if (!_.isUndefined(value) && key !== 'class') {
             element.setAttribute(key, value)
           }
         }

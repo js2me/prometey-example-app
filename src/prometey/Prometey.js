@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { attachTree } from './createElement'
+import { attachTree } from './element'
 
 let uid = 0
 export const Prometey = (Class, props) => {
