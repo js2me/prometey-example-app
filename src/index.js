@@ -1,9 +1,9 @@
 import Prometey, { element } from './prometey'
-// import Input from './components/Input'
+import Input from './components/Input'
 import './styles.css'
 
 Prometey.connect(
-  element('#app->div.wrapper', [
+  element('body->div.wrapper', [
     element('div.header', [
       element(
         'img.logo',
@@ -12,13 +12,15 @@ Prometey.connect(
       element('div.title', 'Prometey'),
     ]),
     element('div.content.pages', [
-      element('div.page.main-page'),
+      element('div.page.main-page', [
+        element(Input, { placeholder: 'placeholder for input 1' }),
+        element(Input, { placeholder: 'placeholder for input 2' }),
+      ]),
       element('div.page.second-page'),
       element('div.page.third-page'),
       element('div.page.fourth-page'),
       element('div.page.fifth-page'),
       element('div.page.sixth-page'),
-      // element(Input, { placeholder: 'default placeholder' }),
     ]),
   ])
 )

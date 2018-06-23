@@ -57,10 +57,13 @@ const aggregateTreeData = (treeData, id, pId) => {
     let updaterTimer = null
     _.forEach(treeEl.component.state, (value, key) => {
       treeEl.component.state.watch(key, (key, value) => {
-        clearTimeout(updaterTimer)
+        if (updaterTimer !== null) {
+          clearTimeout(updaterTimer)
+        }
         updaterTimer = setTimeout(() => {
+          updaterTimer = null
           updateElement(treeEl, treeEl.component.render())
-        }, 10)
+        }, 0)
       })
     })
   }

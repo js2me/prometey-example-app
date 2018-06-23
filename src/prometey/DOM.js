@@ -75,9 +75,10 @@ export const createDOM = treeData =>
   )
 
 export const parseElId = eId =>
+  console.log('eId', eId) ||
   _.reduce(
     eId.split(''),
-    (str, id, index) => str + (!index ? `[${index}]` : `childs[${index}]`),
+    (str, id, index) => str + (!index ? `[${index}]` : `childs[${id}]`),
     ''
   )
 

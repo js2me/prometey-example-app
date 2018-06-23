@@ -10,12 +10,16 @@ export default class Input {
 
   handleChangeInput = e => {
     this.state.value = e.target.value
+    this.setIsDirty()
+  }
+
+  setIsDirty = () => {
     this.state.isDirty = true
   }
 
   render() {
     let { value, isDirty } = this.state
-
+    const { placeholder } = this.props
     return element('div', {
       className: classes('input-wrapper', {
         'is-empty': isDirty && !value,
@@ -25,7 +29,8 @@ export default class Input {
         element('span.label', value),
         element('input', {
           input: this.handleChangeInput,
-          placeholder: 'please enter something...',
+          blur: this.setIsDirty,
+          placeholder,
           value,
         }),
       ],
