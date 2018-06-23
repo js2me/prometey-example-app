@@ -3,7 +3,6 @@ import './index.css'
 
 export default class Input {
   state = {
-    placeholder: '',
     value: '',
     isDirty: false,
   }
@@ -19,14 +18,14 @@ export default class Input {
 
   render() {
     let { value, isDirty } = this.state
-    const { placeholder } = this.props
+    const { placeholder, label } = this.props
     return element('div.input-wrapper', {
       class: classes('input-wrapper', {
         'is-empty': isDirty && !value,
         'is-dirty': isDirty,
       }),
       childs: [
-        element('span.label', value),
+        label && element('span.label', label),
         element('input', {
           input: this.handleChangeInput,
           blur: this.setIsDirty,

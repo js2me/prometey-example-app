@@ -1,5 +1,5 @@
 import { element } from '../../prometey'
-// import './index.css'
+import './index.css'
 
 export default class PageTitle {
   render() {
