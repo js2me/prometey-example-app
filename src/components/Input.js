@@ -1,27 +1,34 @@
-import { element } from '../prometey'
+import { element, classes } from '../prometey'
+import './index.css'
 
 export default class Input {
   state = {
     placeholder: '',
     value: '',
+    isDirty: false,
   }
 
   handleChangeInput = e => {
     this.state.value = e.target.value
+    this.state.isDirty = true
   }
 
   render() {
-    const { placeholder } = this.props
-    let { value } = this.state
+    let { value, isDirty } = this.state
 
-    console.log('Input render', this.state)
-
-    return element('div.input-wrapper', [
-      element('span.placeholder', placeholder),
-      element('input.super-input', {
-        input: this.handleChangeInput,
-        value,
+    return element('div', {
+      className: classes('input-wrapper', {
+        'is-empty': isDirty && !value,
+        'is-dirty': isDirty,
       }),
-    ])
+      childs: [
+        element('span.label', value),
+        element('input', {
+          input: this.handleChangeInput,
+          placeholder: 'please enter something...',
+          value,
+        }),
+      ],
+    })
   }
 }

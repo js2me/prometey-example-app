@@ -7,17 +7,6 @@ export const Prometey = (Class, props) => {
   context.props = props
   context.__proto__.PROMETEY_ID = uid++
 
-  let updaterTimer = null
-
-  _.forEach(context.state, (value, key) => {
-    context.state.watch(key, () => {
-      clearTimeout(updaterTimer)
-      updaterTimer = setTimeout(() => {
-        context.render()
-      })
-    })
-  })
-
   const rawRender = context.render.bind(context)
   context.render = () => rawRender()
   return context

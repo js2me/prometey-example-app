@@ -19,8 +19,8 @@ if (!Object.prototype.watch) {
       let newval = oldval
       const getter = () => newval
       const setter = val => {
-        oldval = newval
-        return (newval = handler.call(this, prop, oldval, val))
+        newval = val
+        handler.call(this, prop, newval)
       }
 
       if (delete this[prop]) {
