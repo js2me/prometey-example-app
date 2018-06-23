@@ -1,11 +1,11 @@
-body, html {
+body, html, div#app {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
-    background: #5a698a;
-    color: #485369;
+    background: #f4f4f4;
     font-size: 34px;
     margin: 0;
     font-family: 'Tajawal', sans-serif;
@@ -13,39 +13,64 @@ body {
     /* font-family: 'Lobster', cursive; */
 }
 
-img.logo {
-    border-radius: 83px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.36);
-    width: 50%;
-    margin: 0 auto;
+.wrapper {
+    display: flex;
+  height: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-top: 70px;
+  overflow: auto;
+  background: url(https://i.stack.imgur.com/LCCB6.jpg);
+  background-size: 124px;
 }
 
 .header {
+    height: 70px;
     display: flex;
-    justify-content: center;
-    flex-direction: column-reverse;
-    text-align: center;
-    padding-top: 30px;
+    padding: 0 80px;
+}
+
+img.logo {
+    height: 70px;
+    width: 70px;
+}
+
+.content.pages {
+    flex: 1;
+    padding: 40px 80px 0;
 }
 
 .title {
-    position: absolute;
-    width: 100%;
-    font-family: 'Shrikhand', cursive;
-    font-size: 130px;
-    color: rgba(68, 89, 142, 0.83);
+    padding-top: 15px;
+    color: #f42f42;
+    font-family: 'Lobster', cursive;
 }
 
-section.footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.page {
     width: 100%;
-    height: 68px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    font-family: 'Lobster', cursive;
-    font-size: 48px;
+    height: 100%;
+    background: #e05d6a;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.52);
+}
+
+.page.main-page {
+    border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+}
+
+.page.fourth-page {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.page.fifth-page {
+    background: rgba(255, 255, 255, 0);
+  box-shadow: none;
+  height: 50%;
+}
+
+.page.sixth-page {
+    background: rgba(0, 0, 0, 0.41);
+  margin-bottom: 30px;
+  height: 14%;
 }
