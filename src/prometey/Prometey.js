@@ -1,11 +1,8 @@
-import _ from 'lodash'
-import { attachTree } from './element'
-
 let uid = 0
 export const Prometey = (Class, props) => {
   let context = new Class()
   context.props = props
-  context.__proto__.PROMETEY_ID = uid++
+  context.__proto__.PROMETEY_ID = uid++ //eslint-disable-line
 
   const rawRender = context.render.bind(context)
   context.render = () => rawRender()

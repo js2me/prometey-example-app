@@ -14,7 +14,10 @@ Prometey.connect(
     ]),
     element('div.content.pages', [
       element('div.page.main-page', [
-        element(PageTitle, { title: 'LIGHT' }),
+        element(PageTitle, {
+          title: 'LIGHT POWERFUL TOOL',
+          description: 'for creating signle page applications',
+        }),
         element('div.page-content', [
           element(Input, { placeholder: 'placeholder for input 1' }),
           element(Input, { placeholder: 'placeholder for input 2' }),

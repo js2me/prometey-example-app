@@ -42,9 +42,9 @@ const attachElementToTree = (treeData, eId) => {
 }
 
 const updateElement = (oldTD, newTD) => {
-  if (newTD.className !== oldTD.className) {
+  if (newTD.class !== oldTD.class) {
     const treeDOMel = getElementByEId(oldTD.eId)
-    treeDOMel.element.className = newTD.className
+    treeDOMel.element.className = newTD.class
   }
 }
 
