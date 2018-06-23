@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { classes } from './classes'
 import { Prometey } from './Prometey'
 import { getElementByEId } from './DOM'
+import { updateElementByProps } from './props'
 
 export const parseQuery = (queryString, classNames) => {
   let [parent, query] = queryString.split('->')
@@ -42,9 +43,16 @@ const attachElementToTree = (treeData, eId) => {
 }
 
 const updateElement = (oldTD, newTD) => {
+  const treeDOMel = getElementByEId(oldTD.eId)
   if (newTD.class !== oldTD.class) {
-    const treeDOMel = getElementByEId(oldTD.eId)
     treeDOMel.element.className = newTD.class
+    oldTD.class = newTD.class
+  }
+  updateElementByProps(newTD.tag, treeDOMel.element, newTD, oldTD)
+  if (newTD.childs) {
+    _.each(newTD.childs, (child, index) =>
+      updateElement(oldTD.childs[index], child)
+    )
   }
 }
 

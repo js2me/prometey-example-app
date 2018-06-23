@@ -1,20 +1,7 @@
 import _ from 'lodash'
+import { updateElementByProps } from './props'
 
 let PROMETEY_DOM = []
-
-const EVENTS_LIST =
-  '/cached/error/abort/load/beforeunload/unload/online/offline/focus/blur/open/' +
-  'message/error/close/pagehide/pageshow/popstate/animationstart/animationend/' +
-  'animationiteration/transitionstart/transitioncancel/transitionend/transitionrun/' +
-  'reset/submit/beforeprint/afterprint/compositionstart/compositionupdate/compositionend/' +
-  'fullscreenchange/fullscreenerror/resize/scroll/cut/copy/paste/keydown/keypress/keyup/mouseenter/' +
-  'mouseover/mousemove/mousedown/mouseup/auxclick/click/dblclick/contextmenu/wheel/mouseleave/mouseout/' +
-  'select/pointerlockchange/pointerlockerror/dragstart/drag/dragend/dragenter/dragover/dragleave/drop/' +
-  'durationchange/loadedmetadata/loadeddata/canplay/canplaythrough/ended/emptied/stalled/suspend/play/' +
-  'playing/pause/waiting/seeking/seeked/ratechange/timeupdate/volumechange/complete/audioprocess/loadstart/' +
-  'progress/error/timeout/abort/load/loadend/change/storage/checking/downloading/error/noupdate/obsolete/' +
-  'updateready/broadcast/CheckboxStateChange/hashchange/input/RadioStateChange/readystatechange/ValueChange/' +
-  'invalid/localized/message/message/message/open/show/'
 
 export const attachToDOM = treeData => {
   const { tag, id: elDOMid, parent, props } = treeData
@@ -27,25 +14,7 @@ export const attachToDOM = treeData => {
     element.setAttribute('id', elDOMid)
   }
   if (!_.isUndefined(props)) {
-    if (_.isObject(props)) {
-      _.forEach(props, (value, key) => {
-        if (EVENTS_LIST.includes(`/${key}/`)) {
-          element.addEventListener(key, value)
-        } else {
-          if (!_.isUndefined(value) && key !== 'class') {
-            element.setAttribute(key, value)
-          }
-        }
-      })
-    } else {
-      if (tag === 'input' || tag === 'textarea') {
-        element.value = props
-      } else if (tag === 'img') {
-        element.src = props
-      } else {
-        element.innerText = props
-      }
-    }
+    updateElementByProps(tag, element, treeData)
   }
 
   if (parent) {
@@ -75,7 +44,6 @@ export const createDOM = treeData =>
   )
 
 export const parseElId = eId =>
-  console.log('eId', eId) ||
   _.reduce(
     eId.split(''),
     (str, id, index) => str + (!index ? `[${index}]` : `childs[${id}]`),
