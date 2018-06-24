@@ -71,7 +71,7 @@ export const updateElementByProps = (tag, element, newTD, oldTD) => {
         )
       } else {
         if (!propIsEvent(propName) && newPropValue !== prevPropValue) {
-          if (propName === 'value') {
+          if (propName === 'value' && element.innerText !== newPropValue) {
             prevProps[propName] = element.innerText = newPropValue
           } else {
             element.setAttribute(propName, newPropValue)
@@ -82,7 +82,10 @@ export const updateElementByProps = (tag, element, newTD, oldTD) => {
     })
   } else {
     if (_.isUndefined(newProps) || _.isNull(newProps) || !newProps.length) {
-      if (tag === 'input' || tag === 'textarea') {
+      if (
+        (tag === 'input' || tag === 'textarea') &&
+        element.value !== newProps
+      ) {
         element.value = ''
       } else if (tag === 'img') {
         element.src = ''
@@ -93,7 +96,10 @@ export const updateElementByProps = (tag, element, newTD, oldTD) => {
         oldTD.props = ''
       }
     } else if (newProps !== prevProps) {
-      if (tag === 'input' || tag === 'textarea') {
+      if (
+        (tag === 'input' || tag === 'textarea') &&
+        element.value !== newProps
+      ) {
         element.value = newProps
       } else if (tag === 'img') {
         element.src = newProps

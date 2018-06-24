@@ -32,7 +32,7 @@ export default class Input {
           placeholder,
           value,
         }),
-        element('span.text', value),
+        element('span.text', value && `You entered ${value}.`),
       ],
     })
   }
