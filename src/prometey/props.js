@@ -55,6 +55,7 @@ const removePropFromElement = (element, prop, name) =>
 export const updateElementByProps = (tag, element, newTD, oldTD) => {
   let newProps = newTD.props
   let prevProps = oldTD && oldTD.props
+  const noChilds = !_.get(newTD.childs, 'length')
 
   if (_.isObject(newProps)) {
     if (_.isEmpty(newProps) && _.isEmpty(prevProps)) {
@@ -89,10 +90,10 @@ export const updateElementByProps = (tag, element, newTD, oldTD) => {
         element.value = ''
       } else if (tag === 'img') {
         element.src = ''
-      } else {
+      } else if (noChilds) {
         element.innerText = ''
       }
-      if (oldTD) {
+      if (oldTD && noChilds) {
         oldTD.props = ''
       }
     } else if (newProps !== prevProps) {
