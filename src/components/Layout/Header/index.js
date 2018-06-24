@@ -28,10 +28,13 @@ export default class Header {
           commonMessage ? `rometey - ${commonMessage}` : 'rometey'
         ),
       ]),
-      element(Button, {
-        label: buttonClicked ? 'Clicked!!!' : 'Click me!',
-        onClick: this.onClick,
-      }),
+      element('div.actions', [
+        buttonClicked && element('label.some-text', 'dynamic childs'),
+        element(Button, {
+          label: buttonClicked ? 'Clicked!!!' : 'Click me!',
+          onClick: this.onClick,
+        }),
+      ]),
     ])
   }
 }

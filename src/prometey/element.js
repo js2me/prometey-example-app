@@ -4,6 +4,8 @@ import { Prometey } from './Prometey'
 import { getElementByEId } from './DOM'
 import { updateElementByProps } from './props'
 
+let JSDOMTree = []
+
 export const parseQuery = (queryString, classNames) => {
   let [parent, query] = queryString.split('->')
   if (!query) {
@@ -20,16 +22,8 @@ export const parseQuery = (queryString, classNames) => {
   }
 }
 
-// const appendChilds = (childs, element) =>
-//   _.map(childs, child =>
-//     element.appendChild(
-//       child instanceof Element ? child : createElement.apply(null, child)
-//     )
-//   )
-
 const generateElId = (pId, id) => `${pId}${id}`
 
-// element = { id, tag, classes, parent }
 const attachElementToTree = (treeData, eId) => {
   let treeEl = { ...treeData }
   if (!eId) {
@@ -42,7 +36,23 @@ const attachElementToTree = (treeData, eId) => {
   return treeEl
 }
 
+const removeExistChilds = (childs, anotherChilds) => {
+  return _.reduce(
+    childs,
+    (arr, child) => {
+      if (_.find(anotherChilds, aC => aC.eId !== child.eId).length) {
+        arr.push(child)
+      }
+      return arr
+    },
+    []
+  )
+}
+
 const updateElement = (oldTD, newTD) => {
+  if (!oldTD) {
+    console.log('sss')
+  }
   const treeDOMel = getElementByEId(oldTD.eId)
   if (newTD.class !== oldTD.class) {
     treeDOMel.element.className = newTD.class
@@ -50,13 +60,24 @@ const updateElement = (oldTD, newTD) => {
   }
   updateElementByProps(newTD.tag, treeDOMel.element, newTD, oldTD)
   if (newTD.childs) {
+    const oldChildsCount = _.get(oldTD, 'childs.length')
+    const newChildsCount = _.get(newTD, 'childs.length')
+    if (oldChildsCount !== newChildsCount) {
+      if (newChildsCount > oldChildsCount) {
+        _.each(removeExistChilds(newTD.childs, oldTD.childs), child => {
+          console.log('new child', child)
+        })
+      } else {
+        _.each(removeExistChilds(oldTD.childs, newTD.childs), child => {
+          console.log('remove child', child)
+        })
+      }
+    }
     _.each(newTD.childs, (child, index) =>
       updateElement(oldTD.childs[index], child)
     )
   }
 }
-
-let JSDOMTree = []
 
 const aggregateTreeData = (treeData, id, pId) => {
   const eId = pId && id && generateElId(pId, id)
@@ -91,13 +112,10 @@ export const createTree = (treeData, pId) => {
 }
 
 export const createElement = (query, props) => {
-  // query = 'section.footer', props = [create('span', 'End of page')]
   if (_.isObject(query)) {
     const component = Prometey(query, props)
     let componentTreeData = component.render()
     componentTreeData.component = component
-    // TODO Пробросить контекст через Prometey и склеить контекст с treeData
-    // Это как вариант, потом просто обновлять как нибудь((
     return componentTreeData
   }
 
@@ -114,44 +132,4 @@ export const createElement = (query, props) => {
     data.props = props
   }
   return data
-  // const element = document.createElement(tag)
-  // if (classes.length) {
-  //   element.class = classes.join(' ')
-  // }
-  // if (id) {
-  //   element.setAttribute('id', id)
-  // }
-
-  // return () => generateElement(query, props, connectors)
-  // if (_.isObject(query)) {
-  //   const component = Prometey(query, props)
-  //   return component.render()
-  // }
-  // let existingTag = findTag(query)
-  // if (existingTag) {
-  //   return existingTag(props, connectors)
-  // }
-  // const { id, tag, classes, parent } = parseQuery(query)
-  // const element = document.createElement(tag)
-  // if (classes.length) {
-  //   element.class = classes.join(' ')
-  // }
-  // if (id) {
-  //   element.setAttribute('id', id)
-  // }
-  // if (_.isArray(props)) {
-  //   appendChilds(props, element)
-  // } else if (_.isObject(props)) {
-  //   appendProps(props, element)
-  // } else {
-  //   appendString(props, element, tag)
-  // }
-  // if (parent) {
-  //   const parentElement = document.querySelector(parent)
-  //   if (!parentElement) throw Error(`Element by query "${parent}" is not found`)
-  //   // setTimeout(() => {
-  //   parentElement.appendChild(element)
-  //   // })
-  // }
-  // return element
 }
