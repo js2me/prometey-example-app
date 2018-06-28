@@ -1,31 +1,36 @@
-import { element } from '../../../prometey'
+import { element } from 'prometey'
 import Button from '../../Button'
 import './index.css'
 
 export default class Header {
   state = {
     buttonClicked: false,
+    clickedCount: 0,
   }
 
   onClick = () => {
-    console.log('from header')
-    this.state.buttonClicked = !this.state.buttonClicked
-    if (this.state.buttonClicked) {
-      this.state.commonMessage = 'it works!!!'
-    } else {
-      this.state.commonMessage = null
-    }
+    this.setState({
+      buttonClicked: !this.state.buttonClicked,
+      clickedCount: ++this.state.clickedCount,
+    })
+  }
+
+  beforeRender() {
+    console.log('aaa beforeRender(){')
   }
 
   render() {
-    const { buttonClicked, commonMessage } = this.state
+    const { buttonClicked, clickedCount } = this.state
 
     return element('div.header', [
-      element('span', [
-        element('h1', 'P'),
+      element('div.logo', [
+        element('span.logo', [
+          element('h1', 'P'),
+          element('div.title', 'rometey'),
+        ]),
         element(
-          'div.title',
-          commonMessage ? `rometey - ${commonMessage}` : 'rometey'
+          'span.sub-message',
+          clickedCount && `clicked count : ${clickedCount}`
         ),
       ]),
       element('div.actions', [
@@ -33,8 +38,13 @@ export default class Header {
         element(Button, {
           label: buttonClicked ? 'Clicked!!!' : 'Click me!',
           onClick: this.onClick,
+          useClick: true,
         }),
       ]),
     ])
+  }
+
+  postRender() {
+    console.log('aaa postRender(){')
   }
 }

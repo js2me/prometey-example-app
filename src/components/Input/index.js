@@ -1,4 +1,4 @@
-import { element, classes } from '../../prometey'
+import { element, classes } from 'prometey'
 import './index.css'
 
 export default class Input {

@@ -1,14 +1,15 @@
-import { element } from '../../prometey'
+import { element } from 'prometey'
 
 export default class Button {
+  handleButtonClick = e => {
+    this.props.onClick()
+  }
+
   render() {
-    const { label, onClick } = this.props
+    const { label, useClick } = this.props
     return element('button.some-button', {
       value: label,
-      click: () => {
-        console.log('clicked!')
-        onClick()
-      },
+      [useClick ? 'onClick' : 'onMouseDown']: this.handleButtonClick,
     })
   }
 }

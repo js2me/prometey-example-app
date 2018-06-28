@@ -1,4 +1,4 @@
-import Prometey, { element } from './prometey'
+import Prometey, { element } from 'prometey'
 import Header from './components/Layout/Header'
 import Content from './components/Layout/Content'
 import './styles.css'
